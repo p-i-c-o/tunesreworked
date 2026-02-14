@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - TunesReloaded Reworked</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lucida+Grande:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --aero-blue: #4ba0e8;
+            --accent-orange: #ff8c42;
+            --accent-orange-dim: rgba(255, 140, 66, 0.15);
+            --accent-orange-glow: rgba(255, 140, 66, 0.4);
+
+            --itunes-silver: #b8c0c8;
+            --itunes-gray: #8a929a;
+
+            --glass-bg: rgba(30, 30, 40, 0.7);
+            --glass-bg-solid: rgba(35, 35, 48, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-light: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+            --text-dark: #e8e8f0;
+            --text-mid: #a0a0b8;
+            --text-light: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', 'Lucida Grande', Tahoma, sans-serif;
+            font-size: 13px;
+            min-height: 100vh;
+            background: #1a1a24;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse 120% 80% at 50% 20%, rgba(60, 50, 80, 0.5) 0%, transparent 50%),
+                radial-gradient(ellipse 100% 60% at 80% 80%, rgba(40, 35, 55, 0.6) 0%, transparent 40%),
+                linear-gradient(180deg, #252535 0%, #1e1e2a 30%, #181820 60%, #121218 100%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+        }
+
+        .aero-glass {
+            background: var(--glass-bg-solid);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow:
+                var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+        }
+
+        .wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100%;
+            padding: 40px 44px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 14px;
+        }
+
+        .body {
+            color: var(--text-mid);
+            line-height: 1.55;
+            font-size: 14px;
+        }
+
+        .about-section {
+            border-left: 3px solid var(--glass-border-light);
+            padding-left: 14px;
+            margin-bottom: 16px;
+        }
+
+        .about-section h3 {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .about-section p {
+            margin-bottom: 8px;
+        }
+
+        .about-section ul {
+            margin: 6px 0 0 18px;
+        }
+
+        .about-section li {
+            margin-bottom: 6px;
+        }
+
+        .about-meta {
+            margin-top: 10px;
+        }
+
+        .body a {
+            color: var(--accent-orange);
+            text-decoration: none;
+        }
+
+        .body code {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 5px;
+            border: 1px solid var(--glass-border-light);
+            background: rgba(0, 0, 0, 0.28);
+            color: var(--text-light);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .body a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            color: var(--itunes-silver);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back:hover { color: var(--text-light); }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="card aero-glass">
+            <div class="title">About TunesReloaded Reworked</div>
+            <div class="body">
+                <div class="about-section">
+                    <h3><strong>Original TunesReloaded message</strong></h3>
+                    <p>This is TunesReloaded, a tool to make the process of managing your iPod's music a lot easier.</p>
+                    <p>I started this project because of a passion to revitalize the music scene for these old iPod's.</p>
+                </div>
+
+                <div class="about-section">
+                    <h3><strong>Added in this variant (Reworked)</strong></h3>
+                    <p>TunesReloaded Reworked is an alternative build focused on browser compatibility and reliability, especially for Brave users.</p>
+                    <p>The goal is to avoid startup blocking, gate features by real browser capabilities, and provide clearer guidance when APIs like File System Access or WebUSB are unavailable.</p>
+                    <p><strong>Change list:</strong></p>
+                    <ul>
+                        <li>Brave compatibility improvements and clearer setup guidance in the browser compatibility modal.</li>
+                        <li>Startup behavior changed to capability diagnostics, with connect-time API gating instead of startup blocking.</li>
+                        <li>Filesystem sync race fix for sqlite tree copy order (<code>iTunes Library.itlp</code> -> <code>iTunes Library</code> -> <code>iTunesControl</code>).</li>
+                        <li>Added explicit WebUSB availability guards and clearer error messaging in setup paths.</li>
+                        <li>Fixed playlist/track context menu placement so actions appear at the cursor reliably.</li>
+                        <li>Adjusted layout behavior for playlist and song list height coordination and scroll behavior.</li>
+                        <li>Updated visible app title text to <code>TunesReloaded Reworked</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="about-meta">
+                    <p>The original TunesReloaded project is fully open source. Its source code is available at <a href="https://github.com/rish1p/tunesreloaded">https://github.com/rish1p/tunesreloaded</a>.</p>
+                    <p>If you find the original tool useful, you can <a href="https://buymeacoffee.com/riship1">buy him a coffee</a>.</p>
+                </div>
+            </div>
+            <a class="back" href="/index.html">← Back</a>
+        </div>
+    </div>
+</body>
+</html>

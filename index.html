@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TunesReloaded Reworked</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lucida+Grande:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color palette */
+            --aero-blue: #4ba0e8;
+            --accent-orange: #ff8c42;
+            --accent-orange-dim: rgba(255, 140, 66, 0.15);
+            --accent-orange-glow: rgba(255, 140, 66, 0.4);
+            
+            /* iTunes gray accents */
+            --itunes-silver: #b8c0c8;
+            --itunes-gray: #8a929a;
+            --itunes-metal: linear-gradient(180deg, #d0d4d8 0%, #a8b0b8 50%, #909aa4 100%);
+            
+            /* Glass panel colors - darker, moody */
+            --glass-bg: rgba(30, 30, 40, 0.7);
+            --glass-bg-solid: rgba(35, 35, 48, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-light: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            
+            /* Text - light for dark bg */
+            --text-dark: #e8e8f0;
+            --text-mid: #a0a0b8;
+            --text-light: #ffffff;
+            
+            /* Button colors */
+            --btn-primary-bg: var(--accent-orange);
+            --btn-primary-hover: #ffa366;
+            --btn-secondary-bg: rgba(60, 60, 80, 0.8);
+            --btn-secondary-hover: rgba(80, 80, 100, 0.9);
+            
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --error: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Moody PS2-era twilight background */
+        body {
+            font-family: 'Segoe UI', 'Lucida Grande', Tahoma, sans-serif;
+            font-size: 13px;
+            min-height: 100vh;
+            background: #1a1a24;
+            background-image: 
+                /* Subtle noise texture */
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"),
+                /* Moody gradient - desaturated purple/blue twilight */
+                radial-gradient(ellipse 120% 80% at 50% 20%, rgba(60, 50, 80, 0.5) 0%, transparent 50%),
+                radial-gradient(ellipse 100% 60% at 80% 80%, rgba(40, 35, 55, 0.6) 0%, transparent 40%),
+                linear-gradient(180deg, 
+                    #252535 0%,
+                    #1e1e2a 30%,
+                    #181820 60%,
+                    #121218 100%
+                );
+            background-attachment: fixed;
+            color: var(--text-dark);
+        }
+
+        /* Aero glass effect mixin */
+        .aero-glass {
+            background: var(--glass-bg-solid);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 20px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 8px var(--accent-orange-glow);
+        }
+
+        .btn-primary:hover {
+            background: var(--btn-primary-hover);
+            box-shadow: 0 4px 16px var(--accent-orange-glow);
+        }
+
+        .btn-secondary {
+            background: var(--btn-secondary-bg);
+            color: var(--text-mid);
+            border-color: var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--btn-secondary-hover);
+            color: var(--text-light);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        /* Main container */
+        .app-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        /* Header banner */
+        .header-banner {
+            padding: 16px 30px;
+            margin-bottom: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border-light);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .app-tagline {
+            font-size: 13px;
+            color: var(--accent-orange);
+            margin-left: 16px;
+            font-style: italic;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-mid);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--text-mid);
+            clip-path: polygon(
+                50% 0%,
+                61% 35%,
+                98% 35%,
+                68% 57%,
+                79% 91%,
+                50% 70%,
+                21% 91%,
+                32% 57%,
+                2% 35%,
+                39% 35%
+            );
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3));
+        }
+
+        .status-dot.connected {
+            background: var(--accent-orange);
+            filter: drop-shadow(0 0 6px var(--accent-orange-glow));
+        }
+
+        /* Main content panel */
+        .main-panel {
+            display: block;
+            background: var(--glass-bg-solid);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border-light);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+        }
+
+        /* Title bar - iTunes brushed metal style */
+        .panel-titlebar {
+            background: var(--itunes-metal);
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-titlebar h2 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #3a3a3a;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .panel-content {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(28, 28, 38, 0.6);
+            border-right: 1px solid var(--glass-border);
+            padding: 16px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--itunes-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .playlist-list {
+            list-style: none;
+        }
+
+        .playlist-item {
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.15s ease;
+            font-size: 13px;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .playlist-item.active {
+            background: var(--accent-orange-dim);
+            color: var(--accent-orange);
+            border-left: 2px solid var(--accent-orange);
+            margin-left: -2px;
+        }
+
+        .track-count {
+            font-size: 11px;
+            color: var(--itunes-silver);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .playlist-item.active .track-count {
+            background: rgba(255, 140, 66, 0.3);
+            color: var(--accent-orange);
+        }
+
+        .sidebar .btn {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        /* Content area */
+        .content-area {
+            padding: 20px;
+            background: rgba(20, 20, 28, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--text-dark);
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 2px var(--accent-orange-dim);
+        }
+
+        .search-box::placeholder {
+            color: var(--itunes-gray);
+        }
+
+        /* Drop zone */
+        .drop-zone {
+            border: 2px dashed var(--glass-border);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            color: var(--text-mid);
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--accent-orange);
+            background: var(--accent-orange-dim);
+            color: var(--accent-orange);
+        }
+
+        /* Track table */
+        .track-table-container {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            max-height: none;
+        }
+
+        .track-table {
+            width: 100%;
+            /* Sticky table headers behave more reliably with separate borders */
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .track-table th,
+        .track-table td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .track-table th {
+            /* Make header opaque so rows can't show through while scrolling */
+            background: rgba(15, 15, 22, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--itunes-silver);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            background-clip: padding-box;
+            box-shadow: 0 1px 0 var(--glass-border);
+        }
+
+        .track-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .track-table tr.selected {
+            background: rgba(255, 140, 66, 0.14);
+        }
+
+        .track-table tr.selected td.title {
+            color: var(--text-light);
+        }
+
+        .track-table td {
+            font-size: 13px;
+        }
+
+        .track-table td.title {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .track-table td.duration {
+            color: var(--itunes-gray);
+        }
+
+        /* Empty state */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: var(--text-mid);
+            text-align: center;
+        }
+
+        .empty-state h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+        /* Footer banner (replaces console pane) */
+        .bottom-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: linear-gradient(180deg, #b0b8c0 0%, #909aa4 100%);
+            border-top: 1px solid rgba(0, 0, 0, 0.25);
+        }
+
+        .bottom-banner a,
+        .bottom-banner button {
+            appearance: none;
+            background: transparent;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            color: #3a3a3a;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            transition: background 0.12s ease;
+        }
+
+        .bottom-banner a:hover,
+        .bottom-banner button:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .bottom-banner-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Console modal log */
+        .console-log {
+            max-height: 320px;
+            overflow: auto;
+            padding: 10px 12px;
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            background: rgba(15, 15, 20, 0.85);
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .console-line {
+            padding: 3px 0;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-mid);
+        }
+        .console-line.success { color: var(--success); }
+        .console-line.warning { color: var(--warning); }
+        .console-line.error { color: var(--error); }
+
+        .console-ts {
+            color: var(--itunes-gray);
+            margin-right: 10px;
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--glass-bg-solid);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--text-light);
+        }
+
+        .modal p {
+            color: var(--text-mid);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-mid);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--text-dark);
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-bar .fill {
+            height: 100%;
+            background: var(--accent-orange);
+            transition: width 0.3s ease;
+        }
+
+        /* Context menu */
+        .context-menu {
+            position: fixed;
+            background: var(--glass-bg-solid);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 8px;
+            padding: 6px 0;
+            min-width: 180px;
+            box-shadow: var(--glass-shadow);
+            z-index: 3000;
+            display: none;
+        }
+
+        .context-menu.show {
+            display: block;
+        }
+
+        .context-menu-item {
+            padding: 9px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            color: var(--text-dark);
+        }
+
+        .context-menu-item:hover {
+            background: var(--accent-orange-dim);
+            color: var(--accent-orange);
+        }
+
+        .context-submenu {
+            position: relative;
+        }
+
+        .context-submenu-items {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background: var(--glass-bg-solid);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 8px;
+            padding: 6px 0;
+            min-width: 180px;
+            max-height: 280px;
+            overflow-y: auto;
+            box-shadow: var(--glass-shadow);
+            display: none;
+            z-index: 3001;
+        }
+
+        .context-submenu:hover .context-submenu-items {
+            display: block;
+        }
+
+        .context-submenu-item {
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .context-submenu-item:hover {
+            background: var(--accent-orange-dim);
+            color: var(--accent-orange);
+        }
+
+        /* Welcome Overlay */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(20, 20, 30, 0.9);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+        }
+
+        .welcome-overlay.hidden {
+            display: none;
+        }
+
+        .welcome-card {
+            background: var(--glass-bg-solid);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 16px;
+            padding: 50px 80px;
+            max-width: 700px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .welcome-card h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .welcome-card p {
+            font-size: 1.1rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .welcome-card .btn {
+            font-size: 14px;
+            padding: 12px 32px;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .panel-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .header-banner {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .header-left, .header-right {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .app-tagline {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Overlay (first visit only) -->
+    <div class="welcome-overlay hidden" id="welcomeOverlay">
+        <div class="welcome-card">
+            <h1>TunesReloaded Reworked</h1>
+            <p>
+                TunesReloaded is a platform that allows you to sync music with your 
+                iPod Classic without needing to use iTunes. 
+                Connect your iPod to get started!
+            </p>
+            <button class="btn btn-primary" onclick="dismissWelcome()">
+                Get Started
+            </button>
+        </div>
+    </div>
+
+    <div class="app-wrapper">
+        <!-- Header Banner -->
+        <header class="header-banner">
+            <div class="header-left">
+                <h1 class="app-title">TunesReloaded Reworked</h1>
+                <p class="app-tagline">Upload songs to your iPod directly with ease!</p>
+            </div>
+            <div class="header-right">
+                <div class="status-badge">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Not Connected</span>
+                </div>
+                <button class="btn btn-primary" id="connectBtn" onclick="selectIpodFolder()">
+                    Select iPod
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Panel -->
+        <div class="main-panel">
+            <div class="panel-titlebar">
+                <h2>Library</h2>
+            </div>
+            <div class="panel-content">
+                <aside class="sidebar">
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">Library</h3>
+                        <ul class="playlist-list" id="playlistList">
+                            <li class="playlist-item active" onclick="selectPlaylist(-1)">
+                                <span>All Tracks</span>
+                                <span class="track-count">0</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">Playlists</h3>
+                        <button class="btn btn-secondary" id="newPlaylistBtn" onclick="showNewPlaylistModal()" disabled>
+                            New Playlist
+                        </button>
+                    </div>
+                </aside>
+
+                <section class="content-area">
+                    <div class="toolbar">
+                        <input type="text" class="search-box" id="searchBox" placeholder="Search..." oninput="filterTracks()">
+                        <button class="btn btn-primary" id="uploadBtn" onclick="uploadTracks()" disabled>Upload</button>
+                        <button class="btn btn-primary" id="uploadFolderBtn" onclick="uploadFolder()" disabled>Upload Folder</button>
+                        <button class="btn btn-secondary" id="saveBtn" onclick="saveDatabase()" disabled>Sync iPod</button>
+                        <button class="btn btn-secondary" id="refreshBtn" onclick="refreshTracks()" disabled>Refresh</button>
+                    </div>
+
+                    <div class="drop-zone" id="dropZone">
+                        <p>Drop audio files here, or click Upload / Upload Folder</p>
+                    </div>
+
+                    <div class="track-table-container" id="trackTableContainer">
+                        <div class="empty-state" id="emptyState">
+                            <h2>No tracks yet</h2>
+                            <p>Upload some music to get started</p>
+                        </div>
+
+                        <table class="track-table" id="trackTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Artist</th>
+                                    <th>Album</th>
+                                    <th>Genre</th>
+                                    <th>Duration</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="trackTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Banner -->
+    <div class="bottom-banner" id="bottomBanner">
+        <a href="/about.html">About</a>
+        <div class="bottom-banner-right">
+            <button type="button" onclick="showBugReportModal()">Report Bug</button>
+            <button type="button" onclick="showConsoleModal()">Console</button>
+        </div>
+    </div>
+
+    <!-- New Playlist Modal -->
+    <div class="modal-overlay" id="newPlaylistModal">
+        <div class="modal">
+            <h2>New Playlist</h2>
+            <div class="form-group">
+                <label for="playlistName">Name</label>
+                <input type="text" id="playlistName" placeholder="My Playlist">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="hideNewPlaylistModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createPlaylist()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Progress Modal -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <h2 id="uploadTitle">Uploading</h2>
+            <p id="uploadStatus">Preparing...</p>
+            <div class="progress-bar">
+                <div class="fill" id="uploadProgress" style="width: 0%"></div>
+            </div>
+            <p id="uploadDetail" style="margin-top: 12px; font-size: 12px; color: var(--text-mid);"></p>
+            <div class="modal-actions" id="uploadActions" style="justify-content: center; display: none;">
+                <button class="btn btn-primary" id="uploadOkBtn" onclick="dismissUploadModal()">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- iPod Not Detected Modal -->
+    <div class="modal-overlay" id="ipodNotDetectedModal">
+        <div class="modal">
+            <h2>iPod Not Detected</h2>
+            <p style="margin-bottom: 20px;">
+                An iPod was not detected. Please note we currently only support classic, non-touch 
+                iPod models (with the 30-pin port), and your iPod should have been set up with 
+                iTunes at least once!
+            </p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="hideIpodNotDetectedModal()">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Bug Modal -->
+    <div class="modal-overlay" id="bugReportModal">
+        <div class="modal">
+            <h2>Report Bug</h2>
+            <p style="margin-bottom: 20px;">report this to main?</p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn btn-secondary" onclick="hideBugReportModal()">No</button>
+                <button class="btn btn-primary" onclick="confirmBugReport()">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Console Modal -->
+    <div class="modal-overlay" id="consoleModal">
+        <div class="modal" style="max-width: 760px;">
+            <h2>Console</h2>
+            <div class="console-log" id="consoleLogContent"></div>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="hideConsoleModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Browser Compatibility Modal -->
+    <div class="modal-overlay" id="browserCompatModal">
+        <div class="modal">
+            <h2>Browser Not Supported</h2>
+            <p style="margin-bottom: 20px;">
+                TunesReloaded needs the File System Access API. In Brave, open <code>brave://flags/#file-system-access-api</code>,
+                enable the flag, relaunch Brave, then reload this page.
+            </p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="hideBrowserCompatModal()">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FirewireGuid Setup Modal (for iPod Classic 6G+) -->
+    <div class="modal-overlay" id="firewireSetupModal">
+        <div class="modal">
+            <h2>iPod Setup Required</h2>
+            <p style="margin-bottom: 16px;">
+                Your iPod needs a one-time setup to sync properly. 
+                This will allow TunesReloaded to write songs that your iPod can recognize.
+            </p>
+            <p style="margin-bottom: 20px; font-size: 12px;">
+                Click the button below and select your iPod from the popup.
+                (this will only take a few seconds)
+            </p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="setupFirewireGuid()">
+                    Setup iPod
+                </button>
+                <button class="btn btn-secondary" onclick="skipFirewireSetup()">
+                    Skip (songs may not appear)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" id="contextDeletePlaylist" style="display: none;">
+            Delete Playlist
+        </div>
+        <div class="context-menu-item" id="contextDeleteTrack" style="display: none;">
+            Delete Track
+        </div>
+        <div class="context-menu-item context-submenu" id="contextAddToPlaylist" style="display: none;">
+            Add to Playlist
+            <div class="context-submenu-items" id="playlistSubmenu"></div>
+        </div>
+        <div class="context-menu-item" id="contextRemoveFromPlaylist" style="display: none;">
+            Remove from Playlist
+        </div>
+    </div>
+
+    <!-- music metadata is loaded via ESM import in modules/audio.js -->
+    <script src="/ipod_manager.js"></script>
+    <script type="module" src="/main.js"></script>
+</body>
+</html>

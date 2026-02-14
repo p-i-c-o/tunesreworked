@@ -1,0 +1,28 @@
+{
+  "name": "tunesreloaded-reworked",
+  "version": "1.0.0",
+  "description": "TunesReloaded Reworked - browser-based iPod manager using WebAssembly",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "ipod",
+    "wasm",
+    "music",
+    "player"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/core-mt": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
+    "music-metadata": "^11.11.0"
+  },
+  "devDependencies": {
+    "vite": "^6.4.1"
+  }
+}
