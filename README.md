@@ -4,6 +4,10 @@
 > This repository is a **rework** of the original TunesReloaded project.
 > The original project is available at: https://github.com/rish1p/tunesreloaded
 
+
+> [!NOTE]
+> This reworked version of TunesReloaded is available at [p-i-c-o.github.io/tunesreworked/](https://p-i-c-o.github.io/tunesreworked/)
+
 TunesReloaded Reworked is a browser-based tool for managing music on classic iPods.  
 This rework keeps the original spirit while focusing on practical compatibility, reliability, and usability improvements.
 
