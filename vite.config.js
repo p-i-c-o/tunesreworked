@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 // Minimal config: keep this repo layout, bundle main.js graph,
 // and serve static assets (like ipod_manager.js/.wasm) from /public.
 export default defineConfig({
+  base: '/tunesreworked/',
   build: {
     rollupOptions: {
       input: {
